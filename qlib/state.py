@@ -55,7 +55,7 @@ class State:
     def apply_operator(self, U: np.ndarray):
         self.matrix = U @ self.matrix @ U.conj().T
 
-    def expectation_value(self, U: np.ndarray):
+    def expectation_value(self, U: np.ndarray) -> np.complex128:
         return np.trace(U @ self.matrix)
     
     def probabilities(self):

@@ -1,5 +1,7 @@
 import numpy as np
 
+I = np.eye(2, dtype=np.complex128)
+
 X = np.array([
     [0, 1],
     [1, 0]
