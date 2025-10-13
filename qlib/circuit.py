@@ -30,6 +30,22 @@ class Circuit:
         else:
             raise ValueError("Expected target qubit(s)")
         
+    def add_controlled_gate(self, gate: np.ndarray, control_qubit: int, target_qubit: int, noise_model: NoiseModel = None):
+        I = np.eye(2, dtype=np.complex128)
+
+        ops_0 = [I] * self.qubits
+        ops_0[control_qubit] = ops.P_0
+
+        ops_1 = [I] * self.qubits
+        ops_1[control_qubit] = ops.P_1
+        ops_1[target_qubit] = gate 
+
+        op_0 = self.__build_operator(ops_0)
+        op_1 = self.__build_operator(ops_1)
+        cgate = op_0 + op_1
+
+        self.add_operator(cgate, noise_model=noise_model)
+        
     def add_operator(self, U: np.ndarray, noise_model: NoiseModel = None):
         self.gates.append(CircuitEntry(True, U, None, noise_model))
         
@@ -52,21 +68,8 @@ class Circuit:
         
         return state
     
-    def CNOT(self, control_qubit: int, target_qubit: int):
-        I = np.eye(2, dtype=np.complex128)
-
-        ops_0 = [I] * self.qubits
-        ops_0[control_qubit] = ops.P_0
-
-        ops_1 = [I] * self.qubits
-        ops_1[control_qubit] = ops.P_1
-        ops_1[target_qubit] = ops.X 
-
-        op_0 = self.__build_operator(ops_0)
-        op_1 = self.__build_operator(ops_1)
-        cnot = op_0 + op_1
-
-        self.add_operator(cnot)
+    def CNOT(self, control_qubit: int, target_qubit: int, noise_model: NoiseModel = None):
+        self.add_controlled_gate(ops.X, control_qubit, target_qubit, noise_model=noise_model)
 
     def __build_operator(self, operators: List[np.ndarray]) -> np.ndarray:
         full_U = operators[0]
