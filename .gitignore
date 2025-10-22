@@ -1,2 +1,8 @@
-/.ipynb_checkpoints
-/qlib/__pycache__/
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+ENV/
